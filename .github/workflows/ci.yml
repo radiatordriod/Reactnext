@@ -1,0 +1,47 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Run linting (optional)
+      - name: Run linting
+        run: npm run lint
+
+      # Build the project
+      - name: Build
+        run: npm run build
+
+      # Run tests (optional)
+      - name: Run tests
+        run: npm run test
+
+      # Dockerize and push image to DockerHub (optional)
+      - name: Docker Build and Push
+        run: |
+          docker build -t my-next-app .
+          docker tag my-next-app radiatordriod/my-next-app:latest
+          docker push radiatordriod/my-next-app:latest
